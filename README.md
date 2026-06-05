@@ -18,6 +18,10 @@ Include the bundled script:
 
 ### Inline declaration with `<script for>`
 
+The `<script for>` (empty `for` attribute) targets the preceding non-script/style sibling element. Three declaration modes are supported:
+
+#### Object mode
+
 ```html
 <button id="save">Save</button>
 <script for>({
@@ -27,7 +31,30 @@ Include the bundled script:
 })</script>
 ```
 
-The `<script for>` (empty `for` attribute) targets the preceding non-script/style sibling element.
+#### Class mode
+
+```html
+<button id="save">Save</button>
+<script for>class extends Behavior {
+    onclick() {
+        this.element.textContent = 'Saved!';
+    }
+    static listeners = [
+        { type: 'keydown', key: 'Enter', action() { this.element.click(); } }
+    ]
+}</script>
+```
+
+The class must be anonymous — named classes will throw an error.
+
+#### Array mode (listeners only, no proto)
+
+```html
+<button id="save">Save</button>
+<script for>([
+    { type: 'click', action() { this.element.textContent = 'Saved!'; } }
+])</script>
+```
 
 ### Programmatic registration
 
