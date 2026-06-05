@@ -72,7 +72,7 @@ class BehaviorRegistry {
             if (element == null) throw new Error('Could not autodetect target for behavior.');
         }
         if (proto) {
-            for (let key of Object.keys(proto).filter(k => k.startsWith('on'))) {
+            for (let key of Object.getOwnPropertyNames(proto).filter(k => k.startsWith('on'))) {
                 if (proto[key] instanceof Function) {
                     listeners = listeners || [];
                     listeners.push({ type: key.slice(2), action: proto[key] });

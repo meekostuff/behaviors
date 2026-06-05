@@ -83,3 +83,48 @@ test('script[for] auto-registers on DOMContentLoaded', async ({ page }) => {
   const result = await page.evaluate(() => document.getElementById('comp').$.val);
   expect(result).toBe(42);
 });
+
+test('script[for] supports class syntax', async ({ page }) => {
+  await page.setContent(`<!DOCTYPE html><html><body>
+    <button id="btn"></button>
+    <script for>class extends Behavior {
+        greet() { return 'hello'; }
+        onclick() { this.element.setAttribute('data-clicked', 'true'); }
+    }</script>
+    <script>${behaviorsJs}</script>
+  </body></html>`);
+  const greet = await page.evaluate(() => document.getElementById('btn').$.greet());
+  expect(greet).toBe('hello');
+  await page.click('#btn');
+  const clicked = await page.evaluate(() => document.getElementById('btn').getAttribute('data-clicked'));
+  expect(clicked).toBe('true');
+});
+
+test('script[for] class with static listeners', async ({ page }) => {
+  await page.setContent(`<!DOCTYPE html><html><body>
+    <input id="inp" />
+    <script for>class extends Behavior {
+        static listeners = [
+            { type: 'keydown', key: 'Enter', action() { this.element.value = 'entered'; } }
+        ]
+    }</script>
+    <script>${behaviorsJs}</script>
+  </body></html>`);
+  await page.focus('#inp');
+  await page.keyboard.press('Enter');
+  const val = await page.evaluate(() => document.getElementById('inp').value);
+  expect(val).toBe('entered');
+});
+
+test('script[for] supports array of listeners', async ({ page }) => {
+  await page.setContent(`<!DOCTYPE html><html><body>
+    <button id="btn"></button>
+    <script for>([
+        { type: 'click', action() { this.element.setAttribute('data-clicked', 'true'); } }
+    ])</script>
+    <script>${behaviorsJs}</script>
+  </body></html>`);
+  await page.click('#btn');
+  const clicked = await page.evaluate(() => document.getElementById('btn').getAttribute('data-clicked'));
+  expect(clicked).toBe('true');
+});
