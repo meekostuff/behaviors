@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Behaviors Demo</title>
+    <script src="../behaviors.js"></script>
+    <style>
+        body { font-family: system-ui; max-width: 600px; margin: 2em auto; }
+        button { padding: 0.5em 1em; font-size: 1rem; }
+    </style>
+</head>
+<body>
+    <h1>Behaviors Demo</h1>
+
+    <h2>Counter</h2>
+    <output class="counter" id="count">0</output><br />
+    <button id="inc">Increment</button>
+    <script for>({
+        listeners: [
+            { type: 'click', action() { let c = document.getElementById('count'); c.value = +c.value + 1; } }
+        ]
+    })</script>
+    <button id="dec">Decrement</button>
+    <script for>({
+        listeners: [
+            { type: 'click', action() { let c = document.getElementById('count'); c.value = +c.value - 1; } }
+        ]
+    })</script>
+
+    <h2>Toggle</h2>
+    <button id="toggle">Toggle Message</button>
+    <script for>({
+        listeners: [
+            { type: 'click', action() {
+                let msg = document.getElementById('message');
+                msg.hidden = !msg.hidden;
+            }}
+        ]
+    })</script>
+    <p id="message">Hello from behaviors!</p>
+
+    <h2>Key Filter</h2>
+    <input id="key-input" placeholder="Press Enter here" style="padding: 0.5em; font-size: 1rem;" />
+    <script for>({
+        listeners: [
+            { type: 'keydown', key: 'Enter', action() {
+                this.element.value = 'Enter pressed!';
+            }}
+        ]
+    })</script>
+
+</body>
+</html>
